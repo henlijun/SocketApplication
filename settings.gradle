@@ -1,0 +1,3 @@
+include ':library_socket'
+include ':app'
+rootProject.name = "SocketApplication"
