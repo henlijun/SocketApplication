@@ -1,7 +1,10 @@
 package com.lj.library_socket.connection.connect;
 
+import android.util.Log;
+
 import com.lj.library_socket.connection.action.SocketStatus;
 import com.lj.library_socket.entity.SocketAddress;
+import com.lj.library_socket.interfaces.connect.IConnectionManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +26,7 @@ import java.net.SocketException;
  * @Version: 1.0
  */
 public class SocketConnection extends SuperConnection{
-
+    private static final String TAG = "SocketConnection";
     private Socket mSocket;
 
     public SocketConnection(SocketAddress socketAddress) {
@@ -33,14 +36,17 @@ public class SocketConnection extends SuperConnection{
     @Override
     protected void openConnection() throws Exception {
         //todo socket默认设置
+        Log.d(TAG, "openConnection: 开始连接 3");
         mSocket = new Socket();
         mSocket.connect(new InetSocketAddress(mSocketAddress.getIp(), mSocketAddress.getPort()));
-
+        Log.w(TAG, "connect = " + mSocket.isConnected());
         mSocket.setTcpNoDelay(true);
         if(mSocket.isConnected() && !mSocket.isClosed()){
             onConnectionOpened();
+            Log.w(TAG, "openConnection: 连接成功" );
         }else {
             mStatus.set(SocketStatus.SOCKET_DISCONNECTED);
+            Log.w(TAG, "openConnection: 连接失败" );
             throw new SocketException("连接失败");
         }
     }
@@ -73,6 +79,11 @@ public class SocketConnection extends SuperConnection{
                 e.printStackTrace();
             }
         }
+        return null;
+    }
+
+    @Override
+    public IConnectionManager upCallbackMessage() {
         return null;
     }
 }

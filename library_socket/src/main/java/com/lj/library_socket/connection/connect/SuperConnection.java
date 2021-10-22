@@ -71,6 +71,7 @@ public abstract class SuperConnection implements IConnectionManager {
         @Override
         public void run() {
             try {
+                Log.d(TAG, "run: 开始连接2");
                 openConnection();
             } catch (Exception e) {
                 e.printStackTrace();

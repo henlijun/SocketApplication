@@ -1,5 +1,9 @@
 package com.lj.library_socket.connection.iowork;
 
+import android.util.Log;
+
+import com.lj.library_socket.connection.action.IOAction;
+import com.lj.library_socket.connection.action.SocketAction;
 import com.lj.library_socket.connection.dispatch.SocketActionDispatcher;
 import com.lj.library_socket.interfaces.connect.IConnectionManager;
 import com.lj.library_socket.interfaces.dispatch.ISocketActionDispatch;
@@ -10,6 +14,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * @ProjectName: SocketApplication
@@ -31,6 +36,7 @@ public class SocketReader implements ISocketReader {
     private ByteBuffer mByteBuffer;
     private Thread mReadThread;
     private boolean isReadThreadStop;
+    private static final String TAG = "SocketReader";
 
     public SocketReader(IConnectionManager iConnectionManager, ISocketActionDispatch socketActionDispatcher){
         this.mIConnManager = iConnectionManager;
@@ -44,8 +50,10 @@ public class SocketReader implements ISocketReader {
             throw new SocketException("读取数据失败，可能是socket已经断开");
         }
         byte[] readData = new byte[length];
+        mByteBuffer.get(readData,0,length);
+        Log.d(TAG, "read: " + Arrays.toString(readData));
         //todo 分发数据
-//        mActionDispatch.dispatchAction();
+        mActionDispatch.dispatchAction(IOAction.ACTION_READ_COMPLETE, readData);
         mByteBuffer.clear();
     }
 

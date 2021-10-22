@@ -3,6 +3,7 @@ package com.lj.library_socket;
 import com.lj.library_socket.connection.connect.SocketConnection;
 import com.lj.library_socket.connection.connect.SuperConnection;
 import com.lj.library_socket.entity.SocketAddress;
+import com.lj.library_socket.exception.SocketException;
 import com.lj.library_socket.interfaces.action.ISocketActionListener;
 import com.lj.library_socket.interfaces.connect.IConnectionManager;
 
@@ -37,6 +38,11 @@ public class LSocket {
     public void connection(SocketAddress socketAddress){
         SuperConnection connection = new SocketConnection(socketAddress);
         this.mConnManager = connection;
+        try {
+            this.mConnManager.connect();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     public void send(byte[] bytes){
